@@ -1,12 +1,32 @@
 import Player from "./components/Player"
 import GameBoard from "./components/GameBoard"
 import { useState } from "react"
+import Log from "./components/Log";
+import { WINNING_COMBINATIONS } from "./winning-combinations";
 
+function derivedActivePlayer(gameTurns){
+  let currentPlayer = 'X';
+  if (gameTurns.length >0 && gameTurns[0].player === 'X'){
+    currentPlayer = 'O';
+  }
+  return currentPlayer;
+}
 function App() {
-  const [activePlayer, setActivePlayer] = useState("X");
+  const [gameTurns, setGameTurns] = useState([]);
 
-  function handleSelectTile(){
-    setActivePlayer((prevPlayer) => (prevPlayer === "X" ? "O" : "X"));
+  const activePlayer = derivedActivePlayer(gameTurns);
+
+  function handleSelectTile(rowIndex, cellIndex){
+
+    setGameTurns((prevGameTurns) => {
+      const currentPlayer = derivedActivePlayer(prevGameTurns);
+      const updatedTurns = [
+        { square: {row:rowIndex, cell:cellIndex}, player: currentPlayer },
+        ...prevGameTurns
+      ];
+      
+      return updatedTurns;
+    }); 
   }
   return (
     <main>
@@ -15,8 +35,9 @@ function App() {
           <Player initialName="Player 1" symbol="X" player = {activePlayer}></Player>
           <Player initialName="Player 2" symbol="O" player = {activePlayer}></Player>
         </ol>
-        <GameBoard onSelectTile={handleSelectTile} player = {activePlayer}></GameBoard>
+        <GameBoard onSelectTile={handleSelectTile} turns = {gameTurns}></GameBoard>
       </div>
+      <Log turns = {gameTurns}/>
     </main>
   )
 }

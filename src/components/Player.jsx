@@ -14,7 +14,7 @@ export default function Player ( {initialName, symbol, player} ){
         playerName = <input type="text"  value={name} onChange={handleChange}/>
     }
     return (
-        <li className={(player == symbol) && "active"}>
+        <li className={(player == symbol) ? "active" : ""}>
             <span className="player">
                 {playerName}
                 <span className="player-symbol">{symbol}</span>
